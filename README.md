@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21159314.svg)](https://doi.org/10.5281/zenodo.21159314)
 # Reproducibility — Differential-Geometric Optimization for Resilient Network Routing
 
 Open-source code that regenerates every table and figure in the paper, with
