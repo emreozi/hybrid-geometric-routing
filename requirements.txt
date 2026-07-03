@@ -1,5 +1,7 @@
 numpy
+scipy
 networkx
-matplotlib
-GraphRicciCurvature
+osqp
 POT
+GraphRicciCurvature
+matplotlib

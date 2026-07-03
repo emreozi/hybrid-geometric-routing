@@ -1,84 +1,54 @@
-# A Hybrid Geometric Optimization Model for Resilient Network Routing — Code
+# Reproducibility — Differential-Geometric Optimization for Resilient Network Routing
 
-Reproducibility code for the figures and numerical illustrations in the paper:
+Open-source code that regenerates every table and figure in the paper, with
+fixed random seeds.
 
-> **A Hybrid Geometric Optimization Model for Resilient Network Routing**
-> Emre Öztürk, Hatay Mustafa Kemal University, Management Information Systems.
+> Emre Öztürk, Department of Management Information Systems,
+> Hatay Mustafa Kemal University.
 
-This repository contains the Python scripts that generate all six figures in the
-paper. The figures are produced either from **exact discrete Ollivier–Ricci
-curvature** (computed with `GraphRicciCurvature` + `POT`, lazy-walk parameter
-α = 0.5) or as plots of the reported numerical results.
+## Install
+    pip install -r requirements.txt
 
-## Contents
+Dependencies: numpy, scipy, networkx, osqp, POT, GraphRicciCurvature, matplotlib.
+Ollivier–Ricci curvature uses the alpha-lazy random walk at alpha = 0.5.
 
-| File | Description |
-|------|-------------|
-| `style.py` | Shared styling module (color maps, curvature normalisation, axis helpers) imported by every figure script. |
-| `fig1.py` | Canonical sub-structures with edges colored by **exact Ollivier–Ricci curvature** (hub-and-spoke star vs. inter-hub bridge). |
-| `fig2.py` | Flow redistribution under the Hybrid Geometric NLP model on the canonical topology. |
-| `fig3.py` | AWS Global Backbone digital twin with edges colored by **exact Ollivier–Ricci curvature**; congested Tier-1 link and curvature-aware detour. |
-| `fig4.py` | Parametric sensitivity of bottleneck/safe flow and path length vs. the base penalty multiplier λ_base. |
-| `fig5.py` | Macro-scale comparison (LP vs. NLP) on Barabási–Albert and Erdős–Rényi networks. |
-| `fig6.py` | AWS digital-twin performance (LP / Pure ORC / Hybrid FRC–ORC): safety and tractability. |
-| `figures/` | Pre-rendered PDF outputs of the six scripts (for reference). |
-| `requirements.txt` | Python dependencies. |
+## Experiment pipeline (`geo_routing/`)
+- `topology.py`   — BA / ER generators and the modular core–edge digital twin
+  (dense regional clusters + low-degree edge servers; regions multi-homed to two
+  Tier-1 core routers) plus the OD-pair demand model.
+- `curvature.py`  — Forman–Ricci (O(E)) and exact Ollivier–Ricci curvature
+  (GraphRicciCurvature + POT), and the FRC->ORC hybrid screen.
+- `optimize.py`   — node-adaptive, curvature-penalized convex QP (OSQP).
+  Utilization and the overflow packet-loss proxy are measured AFTER optimization
+  against nominal capacity (never enforced to zero).
+- `final_run.py`    — Table 1 (sensitivity) and helpers.
+- `exp_scal.py`     — Table 2 (scalability across N = 548..5052).
+- `exp_selfheal.py` — discrete Ricci-flow self-healing experiment.
 
-Scripts using exact Ollivier–Ricci curvature: **`fig1.py`, `fig3.py`** (via
-`GraphRicciCurvature`/`POT`). The remaining scripts plot the reported values,
-which are embedded directly in the scripts (no external data files are needed).
+### Reproduce the numbers
+    python -m geo_routing.final_run 1     # Table 1 (sensitivity)  -> results_exp1.json
+    python -m geo_routing.exp_scal        # Table 2 (scalability)  -> results_scal.json
+    python -m geo_routing.exp_selfheal    # self-healing           -> results_selfheal.json
+    # Table 3/4 (large twin + FRC frontier) -> results_bigtwin.json
 
-## Requirements
+Reported values are means over the seeds fixed in each script; the JSON files in
+this repository are the exact outputs used in the paper.
 
-- Python 3.9+
-- See `requirements.txt`:
-  - `numpy`, `networkx`, `matplotlib`
-  - `GraphRicciCurvature` (exact Ollivier–Ricci curvature)
-  - `POT` (Python Optimal Transport backend used by `GraphRicciCurvature`)
+## Figures
+- `fig1.py`         — Fig. 1: canonical sub-structures (star vs. inter-hub bridge)
+  colored by exact Ollivier–Ricci curvature (kappa = +1/7 ≈ +0.14 spokes;
+  kappa = −5/7 ≈ −0.71 bridge at degree k = 6).
+- `fig2.py`         — Fig. 2: flow redistribution schematic under the NLP model.
+- `make_fig3.py`    — Fig. 3: modular core–edge twin schematic, real ORC coloring.
+- `make_figures.py` — Figs. 4–6: sensitivity, scalability, large-twin performance,
+  plotted from the results_*.json produced above.
 
-## Installation
+    python fig1.py
+    python fig2.py
+    python make_fig3.py       # -> figures/fig3_aws.pdf
+    python make_figures.py    # -> figures/fig4_sensitivity.pdf, fig5_macro.pdf, fig6_aws_perf.pdf
 
-```bash
-python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-## Usage
-
-Run any figure script from this directory; each writes a `.pdf` and a `.png`:
-
-```bash
-python fig1.py     # -> fig1_canonical.pdf / .png
-python fig2.py     # -> fig2_flow.pdf / .png
-python fig3.py     # -> fig3_aws.pdf / .png
-python fig4.py     # -> fig4_sensitivity.pdf / .png
-python fig5.py     # -> fig5_macro.pdf / .png
-python fig6.py     # -> fig6_aws_perf.pdf / .png
-```
-
-To regenerate everything:
-
-```bash
-for f in fig1 fig2 fig3 fig4 fig5 fig6; do python "$f.py"; done
-```
-
-## Notes on reproducibility
-
-- The synthetic networks (Barabási–Albert and Erdős–Rényi) are generated
-  programmatically; set the random seed in the relevant script for an exact
-  match if needed.
-- The exact Ollivier–Ricci curvature is computed with the α-lazy random walk at
-  α = 0.5, consistent with the closed-form values reported in the paper
-  (κ = +1/7 ≈ +0.14 for hub-to-leaf spokes; κ = −5/7 ≈ −0.71 for the inter-hub
-  bridge at degree k = 6).
+Pre-rendered PDFs are in `figures/`.
 
 ## License
-
-This project is released under the MIT License. See the [`LICENSE`](LICENSE)
-file for details.
-
-## Citation
-
-If you use this code, please cite the paper (full bibliographic details to be
-added upon publication).
+MIT (see `LICENSE`).
