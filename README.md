@@ -1,6 +1,6 @@
 # Reproducibility — Structural Resilience in Network Routing via Discrete Ricci Curvature: What the Geometry Adds Beyond Convex Congestion Control
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21159314.svg)](https://doi.org/10.5281/zenodo.21159314)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20836716.svg)](https://doi.org/10.5281/zenodo.20836716)
 
 Open-source code that regenerates every table and figure in the paper, with
 fixed random seeds.
