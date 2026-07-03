@@ -1,4 +1,4 @@
-# Reproducibility — Differential-Geometric Optimization for Resilient Network Routing
+# Reproducibility — Structural Resilience in Network Routing via Discrete Ricci Curvature: What the Geometry Adds Beyond Convex Congestion Control
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21159314.svg)](https://doi.org/10.5281/zenodo.21159314)
 
