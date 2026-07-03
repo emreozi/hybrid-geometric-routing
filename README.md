@@ -1,5 +1,6 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21159314.svg)](https://doi.org/10.5281/zenodo.21159314)
 # Reproducibility — Differential-Geometric Optimization for Resilient Network Routing
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21159314.svg)](https://doi.org/10.5281/zenodo.21159314)
 
 Open-source code that regenerates every table and figure in the paper, with
 fixed random seeds.
@@ -25,11 +26,14 @@ Ollivier–Ricci curvature uses the alpha-lazy random walk at alpha = 0.5.
 - `final_run.py`    — Table 1 (sensitivity) and helpers.
 - `exp_scal.py`     — Table 2 (scalability across N = 548..5052).
 - `exp_selfheal.py` — discrete Ricci-flow self-healing experiment.
+- `exp_baseline.py`  — curvature vs.\ curvature-agnostic penalties at matched latency
+  (LP/uniform-Q/degree-Q/curvature/combo) -> results_baseline.json (paper's key result).
 
 ### Reproduce the numbers
     python -m geo_routing.final_run 1     # Table 1 (sensitivity)  -> results_exp1.json
     python -m geo_routing.exp_scal        # Table 2 (scalability)  -> results_scal.json
     python -m geo_routing.exp_selfheal    # self-healing           -> results_selfheal.json
+    python -m geo_routing.exp_baseline    # curvature vs agnostic  -> results_baseline.json
     # Table 3/4 (large twin + FRC frontier) -> results_bigtwin.json
 
 Reported values are means over the seeds fixed in each script; the JSON files in
@@ -40,7 +44,8 @@ this repository are the exact outputs used in the paper.
   colored by exact Ollivier–Ricci curvature (kappa = +1/7 ≈ +0.14 spokes;
   kappa = −5/7 ≈ −0.71 bridge at degree k = 6).
 - `fig2.py`         — Fig. 2: flow redistribution schematic under the NLP model.
-- `make_fig3.py`    — Fig. 3: modular core–edge twin schematic, real ORC coloring.
+- `make_fig3.py`    — modular core–edge twin schematic, real ORC coloring.
+- `make_fig_baseline.py` — the curvature-vs-congestion baseline figure (from results_baseline.json).
 - `make_figures.py` — Figs. 4–6: sensitivity, scalability, large-twin performance,
   plotted from the results_*.json produced above.
 

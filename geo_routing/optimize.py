@@ -23,7 +23,7 @@ def _arcs(G):
     return arcs
 
 
-def solve(G, b, kappa, lambda_base=10.0, verbose=False):
+def solve(G, b, kappa, lambda_base=10.0, verbose=False, mode='curv'):
     nodes = list(G.nodes())
     idx = {n: i for i, n in enumerate(nodes)}
     arcs = _arcs(G)
@@ -37,10 +37,17 @@ def solve(G, b, kappa, lambda_base=10.0, verbose=False):
         c[a] = G[u][v]["cost"]
         e = tuple(sorted((u, v)))
         k = kappa.get(e, 0.0)
-        if k < 0:
-            lam = lambda_base * (1.0 + math.log((deg[u] * deg[v]) / (d_avg ** 2)))
-            lam = max(0.0, lam)
-            pen[a] = lam * (-k)
+        lam = max(0.0, lambda_base * (1.0 + math.log((deg[u] * deg[v]) / (d_avg ** 2))))
+        if mode == 'curv':          # ours: penalise only negative-curvature edges, scaled by |kappa|
+            if k < 0: pen[a] = lam * (-k)
+        elif mode == 'deg':         # curvature-blind: node-adaptive (degree) quadratic on ALL edges
+            pen[a] = lam
+        elif mode == 'unif':        # curvature-blind: uniform quadratic congestion on ALL edges
+            pen[a] = lambda_base
+        elif mode == 'combo':       # uniform congestion + curvature bonus on negative edges
+            pen[a] = lambda_base * (1.0 + 3.0*max(0.0,-k))
+        else:
+            raise ValueError(mode)
 
     # incidence A (N x M): +1 at tail, -1 at head
     rows, cols, vals = [], [], []

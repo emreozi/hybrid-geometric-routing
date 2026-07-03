@@ -32,27 +32,28 @@ ax.add_patch(FancyBboxPatch((-4.85,0.55),9.7,1.95,boxstyle="round,pad=0.1,roundi
              fc="none",ec=CR,lw=1.3,ls=(0,(6,4)),alpha=0.85,zorder=0))
 ax.add_patch(FancyBboxPatch((-5.0,-2.45),10.0,2.55,boxstyle="round,pad=0.1,rounding_size=0.45",
              fc="none",ec=TEDK,lw=1.3,ls=(0,(6,4)),alpha=0.85,zorder=0))
-ax.text(-4.7,2.28,"Tier-1 Core Backbone Zone   $\\kappa<0$",ha="left",fontsize=10.5,color="#a93226",style="italic")
-ax.text(-4.85,-2.22,"Regional Transit Mesh   $\\kappa>0$",ha="left",fontsize=10.5,color="#0a6464",style="italic")
+ax.text(-4.7,2.28,"Tier-1 Core Zone ($\\kappa<0$)",ha="left",fontsize=10.5,color="#a93226",style="italic")
+ax.text(-4.85,-2.22,"Regional Transit Mesh ($\\kappa>0$)",ha="left",fontsize=10.5,color="#0a6464",style="italic")
 for u,v in G.edges():
     if tuple(sorted((u,v)))==tuple(sorted(congested)): continue
     ax.plot([pos[u][0],pos[v][0]],[pos[u][1],pos[v][1]],color=CMAP(NORM(kget(u,v))),lw=2.4,solid_capstyle="round",zorder=2)
 x0,y0=pos["C1"]; x1,y1=pos["C2"]
 ax.plot([x0,x1],[y0,y1],color=CR,lw=3.2,ls=(0,(5,3)),zorder=3)
 mx,my=(x0+x1)/2,(y0+y1)/2
-ax.add_patch(FancyBboxPatch((mx-1.72,my+0.12),2.25,0.40,boxstyle="round,pad=0.04",fc="white",ec=CR,lw=1.2,zorder=6))
-ax.text(mx-0.60,my+0.32,"Congested link (114.4%, LP)",ha="center",va="center",fontsize=8.2,color=CR,fontweight="bold",zorder=7)
+ax.add_patch(FancyBboxPatch((mx-1.15,my+0.17),2.30,0.42,boxstyle="round,pad=0.04",fc="white",ec=CR,lw=1.2,zorder=6))
+ax.text(mx,my+0.38,"Congested link (114.4%, LP)",ha="center",va="center",fontsize=8.2,color=CR,fontweight="bold",zorder=7)
+ax.annotate("",xy=(mx,my+0.02),xytext=(mx,my+0.17),arrowprops=dict(arrowstyle="-",color=CR,lw=0.8),zorder=6)
 for u,v in [("C1","Reg-B"),("Reg-B","Reg-D"),("Reg-D","C3"),("C3","C2")]:
     ax.add_patch(FancyArrowPatch(pos[u],pos[v],arrowstyle="-|>",mutation_scale=18,lw=3.6,color=TE,alpha=0.9,shrinkA=16,shrinkB=16,zorder=4,connectionstyle="arc3,rad=0.07"))
-ax.annotate("Curvature-aware detour\n(high-$\\kappa$ regional mesh)",xy=((pos["Reg-B"][0]+pos["Reg-D"][0])/2,pos["Reg-B"][1]),
-            xytext=(0.0,0.55),ha="center",fontsize=9.5,color=TEDK,fontweight="bold",
-            arrowprops=dict(arrowstyle="-|>",color=TEDK,lw=1.2),zorder=7)
+ax.annotate("Curvature-aware detour\n(high-$\\kappa$ regional mesh)",xy=(1.1,-0.52),
+            xytext=(1.1,0.62),ha="center",fontsize=9.5,color=TEDK,fontweight="bold",
+            arrowprops=dict(arrowstyle="-|>",color=TEDK,lw=1.2,connectionstyle="arc3,rad=0.0"),zorder=7)
 for n in core:
     ax.scatter(*pos[n],s=1500,c=[INK],edgecolors="white",linewidths=2.0,zorder=8)
     ax.text(*pos[n],DISP[n],ha="center",va="center",color="white",fontsize=8.4,fontweight="bold",zorder=9)
 for n in regional:
-    ax.scatter(*pos[n],s=580,c=[STEEL],edgecolors="white",linewidths=1.5,zorder=8)
-    ax.text(*pos[n],n,ha="center",va="center",color="white",fontsize=7.8,fontweight="bold",zorder=9)
+    ax.scatter(*pos[n],s=520,c=[STEEL],edgecolors="white",linewidths=1.5,zorder=8)
+    ax.text(pos[n][0],pos[n][1]-0.40,n,ha="center",va="top",color=STEEL,fontsize=8.6,fontweight="bold",zorder=9)
 for n in relay:
     ax.scatter(*pos[n],s=300,c=[AMBER],edgecolors="white",linewidths=1.3,zorder=8)
     ax.text(pos[n][0],pos[n][1]-0.32,"IXP",ha="center",va="center",color="#9a6212",fontsize=7.6,fontweight="bold",zorder=9)
